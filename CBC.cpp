@@ -20,4 +20,22 @@ string CBC_encryption(vector<string> blocks, string key, string IV) {
 
 string CBC_decryption(vector<string> blocks, string key, string IV) {
 
+  // generate DES round keys/initalize with IV
+  vector<string> keys = key_gen(key);
+  string prev = IV;
+  string plaintext = "";
+
+  // DES decryption
+  for(int i = 0; i < blocks.size(); ++i){
+    string decrypted = decryption(blocks[i], keys);
+    // XOR with previous ciphertext/IV
+    string original = XOR(decrypted, prev, 64);
+    // append plaintext
+    plaintext += original;
+    // update previous block
+    prev = blocks[i];
+  }
+
+  return plaintext;
+
 }
